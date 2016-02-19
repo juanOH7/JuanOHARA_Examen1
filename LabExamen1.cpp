@@ -16,28 +16,50 @@ bool validarNOPiezaenPos(int**,int,int);
 double distancia(int,int,int,int);
 bool validarMovimiento(double);
 void turnoMover(int&,int&);
-bool validarCoordenadas(double);
+bool validarCoordenadas(int,int);
 bool validarTurnoJUg1Sel(int**,int,int);
 bool validarTurnoJUg2Sel(int**,int,int);
+void turnoMover2(int&,int&);
 
 int main(int argc, char const *argv[]){
-	int size = 7, turno=1, posX, posY, posXMover, posYMover;
-	int** tablero = newArray();
+	int size = 7, turno=1, posX, posY, posXMover, posYMover, cont;
+	int** arreglo = newArray();
 	double dist;
 	bool valiMoviLibre = true,valiMov = true ,valiCoor = true, valiTurnoSel1 = true,valiTurnoSel2 = true, terminoJuego= true;
-	llenarTablero(tablero,size);
+	llenarTablero(arreglo,size);
 	do{
-		if (turno == 1){
-			imprimirTablero(tablero, size);
+		while (turno == 1){
+			imprimirTablero(arreglo, size);
 			while(valiMoviLibre && valiMov && valiTurnoSel1 && valiCoor){
+				turnoMover(posX, posY);
+				turnoMover2(posXMover, posYMover);
+				valiMoviLibre = validarNOPiezaenPos(arreglo, posX, posY);
+				dist = distancia(posX, posY, posXMover, posYMover);
+				valiMov = validarMovimiento(dist);
+				valiCoor = validarCoordenadas(posX, posY);
+				valiTurnoSel1 = validarTurnoJUg1Sel(arreglo, posX, posY);
 			}
-		}else if(turno == 2){
-			imprimirTablero(tablero, size);
-			while(valiMoviLibre && valiMov && valiTurnoSel1 && valiCoor){
+			moverPiezajug1(arreglo, posX,posY, posXMover, posYMover, dist);
+			cont++;
+			turno = 2;
+		}
+		 while(turno == 2){
+			imprimirTablero(arreglo, size);
+			while(valiMoviLibre && valiMov && valiTurnoSel2 && valiCoor){
+				turnoMover(posX, posY);
+				turnoMover2(posXMover, posYMover);
+				valiMoviLibre = validarNOPiezaenPos(arreglo, posX, posY);
+				dist = distancia(posX, posY, posXMover, posYMover);
+				valiMov = validarMovimiento(dist);
+				valiCoor = validarCoordenadas(posX, posY);
+				valiTurnoSel2 = validarTurnoJUg2Sel(arreglo, posX, posY);	
 			}
-		}	
-	} while (terminoJuego);
-	deletePunteros(tablero,size);
+			moverPiezajug1(arreglo, posX,posY, posXMover, posYMover, dist);
+			cont++;
+			turno = 1;
+		}
+	} while (cont != 20);
+	deletePunteros(arreglo,size);
 	return 0;
 }
 
@@ -329,7 +351,7 @@ void moverPiezajug2(int** arreglo, int posX, int posY, int posXMover, int posYMo
     }
 }
 
-bool validarNOPiezaenPos(int** arreglo, int posXMover, posYMover){//hay una pieza ahi para poder mover?
+bool validarNOPiezaenPos(int** arreglo, int posXMover, int posYMover){//hay una pieza ahi para poder mover?
 	if (arreglo[posXMover][posYMover] != 0){
 		return true;
 	}else {
@@ -360,6 +382,13 @@ bool validarMovimiento(double distancia){
 }
 void turnoMover(int &posX, int &posY){
 	cout << "ingrese las coordenadas que quiere mover" << endl;
+	cout << "Pos X :" << endl;
+	cin >> posX;
+	cout << "Pos Y :" << endl;
+	cin >> posY;
+}
+void turnoMover2(int &posX, int &posY){
+	cout << "ingrese las coordenadas hacia donde la quiere mover" << endl;
 	cout << "Pos X :" << endl;
 	cin >> posX;
 	cout << "Pos Y :" << endl;
