@@ -10,28 +10,353 @@ int**newArray();
 void imprimirTablero(int**, int);
 void llenarTablero(int**, int);
 void deletePunteros(int**,int);
+void moverPiezajug1(int**,int,int,int,int,double);
+void moverPiezajug2(int**,int,int,int,int,double);
+bool validarNOPiezaenPos(int**,int,int);
+double distancia(int,int,int,int);
+bool validarMovimiento(double);
+void turnoMover(int&,int&);
+bool validarCoordenadas(double);
+bool validarTurnoJUg1Sel(int**,int,int);
+bool validarTurnoJUg2Sel(int**,int,int);
 
 int main(int argc, char const *argv[]){
 	int size = 7, turno=1, posX, posY, posXMover, posYMover;
-	bool contJuego = true, turnoValidoSel == true, turnoValidoMov = true;
 	int** tablero = newArray();
-	llenarTablero(tablero, size);
-	imprimirTablero(tablero, size);
+	double dist;
+	bool valiMoviLibre = true,valiMov = true ,valiCoor = true, valiTurnoSel1 = true,valiTurnoSel2 = true, terminoJuego= true;
+	llenarTablero(tablero,size);
 	do{
 		if (turno == 1){
-			while(turnoValidoSel){
-				turnoValido = validarTurnoJUg1Sel(arreglo, posX, posY);
-				if (turnoValido == true){
-					cout << "Posicion no valida!!";
-				}
+			imprimirTablero(tablero, size);
+			while(valiMoviLibre && valiMov && valiTurnoSel1 && valiCoor){
 			}
-			turno = 2;
 		}else if(turno == 2){
-			turno = 1;
-		}
-	} while (contJuego);
+			imprimirTablero(tablero, size);
+			while(valiMoviLibre && valiMov && valiTurnoSel1 && valiCoor){
+			}
+		}	
+	} while (terminoJuego);
 	deletePunteros(tablero,size);
 	return 0;
+}
+
+void moverPiezajug1(int** arreglo, int posX, int posY, int posXMover, int posYMover, double distancia){
+	//un paso
+	const double mover01 = sqrt(2);//diagonal
+	const double mover11 = 1;
+	//dos pasos
+	const double mover02 = 2;
+	const double mover22 = sqrt(8);//diagonal
+	if ( (distancia == mover01) || (distancia == mover11) ){
+		arreglo[posXMover][posYMover] = 1;
+		if( (posXMover == 0) && (posYMover ==0) ){
+			for (int i = 0; i < posXMover + 1; ++i){
+				for (int j = 0; j < posYMover + 1; ++j){
+					if (arreglo[i][j] == 2){
+						arreglo[i][j] == 1;
+					}
+			    }
+	    	}
+	    }else if( (posXMover == 0) && (posYMover ==6) ){
+			for (int i = 0; i < posXMover + 1; ++i){
+				for (int j = 5; j < posYMover + 1; ++j){
+					if (arreglo[i][j] == 2){
+						arreglo[i][j] == 1;
+					}
+			    }
+	    	}
+	    }else if( (posXMover == 6) && (posYMover ==0) ){
+			for (int i = 5; i < posXMover + 1; ++i){
+				for (int j = 0; j < posYMover + 1; ++j){
+					if (arreglo[i][j] == 2){
+						arreglo[i][j] == 1;
+					}
+			    }
+	    	}
+	    }else if( (posXMover == 6) && (posYMover ==6) ){
+			for (int i = 5; i < posXMover + 1; ++i){
+				for (int j = 5; j < posYMover + 1; ++j){
+					if (arreglo[i][j] == 2){
+						arreglo[i][j] == 1;
+					}
+			    }
+	    	}
+	    }else if (posXMover == 0){
+	    	for (int i = 0; i < posXMover + 1; ++i){
+				for (int j = posYMover - 1; j < posYMover + 1; ++j){
+					if (arreglo[i][j] == 2){
+						arreglo[i][j] == 1;
+					}
+			    }
+	    	}
+	    }else if(posXMover == 6){
+	    	for (int i = 5; i < posXMover + 1; ++i){
+				for (int j = posYMover - 1; j < posYMover + 1; ++j){
+					if (arreglo[i][j] == 2){
+						arreglo[i][j] == 1;
+					}
+			    }
+	    	}
+	    }else if (posYMover == 0){
+	    	for (int i = posXMover + 1; i < posXMover + 1; ++i){
+				for (int j = 0; j < posYMover + 1; ++j){
+					if (arreglo[i][j] == 2){
+						arreglo[i][j] == 1;
+					}
+			    }
+	    	}
+	    }else if (posYMover == 6){
+	    	for (int i = posXMover + 1; i < posXMover + 1; ++i){
+				for (int j = 5; j < posYMover + 1; ++j){
+					if (arreglo[i][j] == 2){
+						arreglo[i][j] == 1;
+					}
+			    }
+	    	}
+	    }
+	}else if( (distancia == mover02) || (distancia == mover22) ){
+		arreglo[posXMover][posYMover] = 1;
+		arreglo[posXMover][posYMover] = 0;
+		if( (posXMover == 0) && (posYMover ==0) ){
+			for (int i = 0; i < posXMover + 1; ++i){
+				for (int j = 0; j < posYMover + 1; ++j){
+					if (arreglo[i][j] == 2){
+						arreglo[i][j] == 1;
+					}
+			    }
+	    	}
+	    }else if( (posXMover == 0) && (posYMover ==6) ){
+			for (int i = 0; i < posXMover + 1; ++i){
+				for (int j = 5; j < posYMover + 1; ++j){
+					if (arreglo[i][j] == 2){
+						arreglo[i][j] == 1;
+					}
+			    }
+	    	}
+	    }else if( (posXMover == 6) && (posYMover ==0) ){
+			for (int i = 5; i < posXMover + 1; ++i){
+				for (int j = 0; j < posYMover + 1; ++j){
+					if (arreglo[i][j] == 2){
+						arreglo[i][j] == 1;
+					}
+			    }
+	    	}
+	    }else if( (posXMover == 6) && (posYMover ==6) ){
+			for (int i = 5; i < posXMover + 1; ++i){
+				for (int j = 5; j < posYMover + 1; ++j){
+					if (arreglo[i][j] == 2){
+						arreglo[i][j] == 1;
+					}
+			    }
+	    	}
+	    }else if (posXMover == 0){
+	    	for (int i = 0; i < posXMover + 1; ++i){
+				for (int j = posYMover - 1; j < posYMover + 1; ++j){
+					if (arreglo[i][j] == 2){
+						arreglo[i][j] == 1;
+					}
+			    }
+	    	}
+	    }else if(posXMover == 6){
+	    	for (int i = 5; i < posXMover + 1; ++i){
+				for (int j = posYMover - 1; j < posYMover + 1; ++j){
+					if (arreglo[i][j] == 2){
+						arreglo[i][j] == 1;
+					}
+			    }
+	    	}
+	    }else if (posYMover == 0){
+	    	for (int i = posXMover + 1; i < posXMover + 1; ++i){
+				for (int j = 0; j < posYMover + 1; ++j){
+					if (arreglo[i][j] == 2){
+						arreglo[i][j] == 1;
+					}
+			    }
+	    	}
+	    }else if (posYMover == 6){
+	    	for (int i = posXMover + 1; i < posXMover + 1; ++i){
+				for (int j = 5; j < posYMover + 1; ++j){
+					if (arreglo[i][j] == 2){
+						arreglo[i][j] == 1;
+					}
+			    }
+	    	}
+	    }
+    }   
+}
+void moverPiezajug2(int** arreglo, int posX, int posY, int posXMover, int posYMover, double distancia){
+	const double mover01 = sqrt(2);//diagonal
+	const double mover11 = 1;
+	//dos pasos
+	const double mover02 = 2;
+	const double mover22 = sqrt(8);//diagonal
+	if ( (distancia == mover01) || (distancia == mover11) ){
+		arreglo[posXMover][posYMover] = 2;
+		if( (posXMover == 0) && (posYMover ==0) ){
+			for (int i = 0; i < posXMover + 1; ++i){
+				for (int j = 0; j < posYMover + 1; ++j){
+					if (arreglo[i][j] == 1){
+						arreglo[i][j] == 2;
+					}
+			    }
+	    	}
+	    }else if( (posXMover == 0) && (posYMover ==6) ){
+			for (int i = 0; i < posXMover + 1; ++i){
+				for (int j = 5; j < posYMover + 1; ++j){
+					if (arreglo[i][j] == 1){
+						arreglo[i][j] == 2;
+					}
+			    }
+	    	}
+	    }else if( (posXMover == 6) && (posYMover ==0) ){
+			for (int i = 5; i < posXMover + 1; ++i){
+				for (int j = 0; j < posYMover + 1; ++j){
+					if (arreglo[i][j] == 1){
+						arreglo[i][j] == 2;
+					}
+			    }
+	    	}
+	    }else if( (posXMover == 6) && (posYMover ==6) ){
+			for (int i = 5; i < posXMover + 1; ++i){
+				for (int j = 5; j < posYMover + 1; ++j){
+					if (arreglo[i][j] == 1){
+						arreglo[i][j] == 2;
+					}
+			    }
+	    	}
+	    }else if (posXMover == 0){
+	    	for (int i = 0; i < posXMover + 1; ++i){
+				for (int j = posYMover - 1; j < posYMover + 1; ++j){
+					if (arreglo[i][j] == 1){
+						arreglo[i][j] == 2;
+					}
+			    }
+	    	}
+	    }else if(posXMover == 6){
+	    	for (int i = 5; i < posXMover + 1; ++i){
+				for (int j = posYMover - 1; j < posYMover + 1; ++j){
+					if (arreglo[i][j] == 1){
+						arreglo[i][j] == 2;
+					}
+			    }
+	    	}
+	    }else if (posYMover == 0){
+	    	for (int i = posXMover + 1; i < posXMover + 1; ++i){
+				for (int j = 0; j < posYMover + 1; ++j){
+					if (arreglo[i][j] == 1){
+						arreglo[i][j] == 2;
+					}
+			    }
+	    	}
+	    }else if (posYMover == 6){
+	    	for (int i = posXMover + 1; i < posXMover + 1; ++i){
+				for (int j = 5; j < posYMover + 1; ++j){
+					if (arreglo[i][j] == 1){
+						arreglo[i][j] == 2;
+					}
+			    }
+	    	}
+	    }
+	}else if( (distancia == mover02) || (distancia == mover22) ){
+		arreglo[posXMover][posYMover] = 2;
+		arreglo[posXMover][posYMover] = 0;
+		if( (posXMover == 0) && (posYMover ==0) ){
+			for (int i = 0; i < posXMover + 1; ++i){
+				for (int j = 0; j < posYMover + 1; ++j){
+					if (arreglo[i][j] == 1){
+						arreglo[i][j] == 2;
+					}
+			    }
+	    	}
+	    }else if( (posXMover == 0) && (posYMover ==6) ){
+			for (int i = 0; i < posXMover + 1; ++i){
+				for (int j = 5; j < posYMover + 1; ++j){
+					if (arreglo[i][j] == 1){
+						arreglo[i][j] == 2;
+					}
+			    }
+	    	}
+	    }else if( (posXMover == 6) && (posYMover ==0) ){
+			for (int i = 5; i < posXMover + 1; ++i){
+				for (int j = 0; j < posYMover + 1; ++j){
+					if (arreglo[i][j] == 1){
+						arreglo[i][j] == 2;
+					}
+			    }
+	    	}
+	    }else if( (posXMover == 6) && (posYMover ==6) ){
+			for (int i = 5; i < posXMover + 1; ++i){
+				for (int j = 5; j < posYMover + 1; ++j){
+					if (arreglo[i][j] == 1){
+						arreglo[i][j] == 2;
+					}
+			    }
+	    	}
+	    }else if (posXMover == 0){
+	    	for (int i = 0; i < posXMover + 1; ++i){
+				for (int j = posYMover - 1; j < posYMover + 1; ++j){
+					if (arreglo[i][j] == 1){
+						arreglo[i][j] == 2;
+					}
+			    }
+	    	}
+	    }else if(posXMover == 6){
+	    	for (int i = 5; i < posXMover + 1; ++i){
+				for (int j = posYMover - 1; j < posYMover + 1; ++j){
+					if (arreglo[i][j] == 1){
+						arreglo[i][j] == 2;
+					}
+			    }
+	    	}
+	    }else if (posYMover == 0){
+	    	for (int i = posXMover + 1; i < posXMover + 1; ++i){
+				for (int j = 0; j < posYMover + 1; ++j){
+					if (arreglo[i][j] == 1){
+						arreglo[i][j] == 2;
+					}
+			    }
+	    	}
+	    }else if (posYMover == 6){
+	    	for (int i = posXMover + 1; i < posXMover + 1; ++i){
+				for (int j = 5; j < posYMover + 1; ++j){
+					if (arreglo[i][j] == 1){
+						arreglo[i][j] == 2;
+					}
+			    }
+	    	}
+	    }
+    }
+}
+
+bool validarNOPiezaenPos(int** arreglo, int posXMover, posYMover){//hay una pieza ahi para poder mover?
+	if (arreglo[posXMover][posYMover] != 0){
+		return true;
+	}else {
+		return false;
+	}
+}
+
+double distancia(int posX, int posY,int posXMover, int posYMover){
+	int dif1 = posX - posXMover;
+	int dif2 = posY - posYMover;
+	double douDif1 = pow(dif1, 2);
+	double douDif2 = pow(dif2, 2);
+	double sumaDif= douDif1 + douDif2;
+	return sqrt(sumaDif);
+}
+bool validarMovimiento(double distancia){
+	//un paso
+	const double mover01 = sqrt(2);//diagonal
+	const double mover11 = 1;
+	//dos pasos
+	const double mover02 = 2;
+	const double mover22 = sqrt(8);//diagonal
+	if ((distancia == mover11) || (distancia == mover01) || (distancia == mover02) || (distancia == mover22)){
+		return false;
+	}else{
+		return true;
+	}
 }
 void turnoMover(int &posX, int &posY){
 	cout << "ingrese las coordenadas que quiere mover" << endl;
@@ -78,6 +403,16 @@ int**newArray(){
 	}
 	//fin new
 	return arreglo;
+}
+
+bool validarCoordenadas(int x, int y){
+	if ((x > 6) || (x < 0)){
+		return true;
+	}else if((y > 6) || (y < 0)){
+		return true;
+	}else{
+		return false;
+	}
 }
 bool validarTurnoJUg1Sel(int** arreglo, int x, int y){
 	if (arreglo[x][y] == 0){
